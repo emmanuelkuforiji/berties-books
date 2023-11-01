@@ -1,4 +1,10 @@
 module.exports = function(app, shopData) {
+  const redirectLogin = (req, res, next) => {
+    if (!req.session.userId ) {
+      res.redirect('./login')
+    } else { next (); }
+}
+
     const bcrypt = require('bcrypt');
 
     // Handle our routes
@@ -68,9 +74,11 @@ module.exports = function(app, shopData) {
                       // TODO: Handle error
                       console.log(err);
                     }
-                    else if (result == true) {
-                      // TODO: Send message
-                      res.send('Logged in! <a href = ' + './' + '>home</a>');
+                    else if (result == true) {  
+                    // Save user session here, when login is successful
+                    req.session.userId = req.body.username;
+                    // TODO: Send message
+                    res.send('Logged in! <a href = ' + './' + '>home</a>');
                     }
                     else {
                       // TODO: Send message
@@ -82,6 +90,15 @@ module.exports = function(app, shopData) {
 
         
         })
+    
+    app.get('/logout', redirectLogin, (req,res) => {
+        req.session.destroy(err => {
+        if (err) {
+          return res.redirect('./')
+        }
+        res.send('you are now logged out. <a href='+'./'+'>Home</a>');
+        })
+    })
 
     app.get('/list', function(req, res) {
         let sqlquery = "SELECT * FROM books"; // query database to get all the books
@@ -96,7 +113,7 @@ module.exports = function(app, shopData) {
          });
     });
 
-    app.get('/listusers', function(req, res) {
+    app.get('/listusers', redirectLogin, function(req, res) {
         let sqlquery = "SELECT * FROM user"; // query database to get all the users
         // execute sql query
         db.query(sqlquery, (err, result) => {
@@ -109,7 +126,7 @@ module.exports = function(app, shopData) {
          });
     });
 
-    app.get('/addbook', function (req, res) {
+    app.get('/addbook', redirectLogin, function (req, res) {
         res.render('addbook.ejs', shopData);
      });
  
