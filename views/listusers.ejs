@@ -1,12 +1,12 @@
 <!doctype html>
 <html>
   <head>
-    <title>Welcome to <%=shopName%></title>
+    <title>Welcome to <%=promotionName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
-    <h1><%=shopName%> Shop</h1>
-    <h2>Here are the users subscribed to our shop:</h2>
+    <h1><%=promotionName%></h1>
+    <h2>Here are the users subscribed to our promotional company:</h2>
     <ul>
       <% availableUser.forEach(function(user) { %>
         <li><%= user.username %>, <%= user.firstname %>, <%= user.lastname %></li>
