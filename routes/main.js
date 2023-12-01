@@ -19,23 +19,64 @@ module.exports = function(app, fighterData) {
         res.render("search.ejs", fighterData);
     });
     app.get('/search-result', function (req, res) {
-      // Splitting the keyword at spaces and preparing for SQL query
-      let keywords = req.query.keyword.split(/\s+/).map(kw => '%' + kw + '%');
-      let sqlQueryParts = keywords.map(kw => "(forename LIKE ? OR surname LIKE ?)");
-      let sqlQuery = "SELECT * FROM fighters WHERE " + sqlQueryParts.join(' AND ');
+      let sqlQuery = "SELECT * FROM fighters";
+      let queryConditions = [];
+      let queryParameters = [];
   
-      // Flatten the keywords array for parameterized query
-      let queryParameters = keywords.reduce((acc, kw) => [...acc, kw, kw], []);
-  
-      // Execute SQL query with parameterized input
-      db.query(sqlQuery, queryParameters, (err, result) => {
-          if (err) {
-              console.error(err.message); // Log the error
-              res.redirect('./'); // Redirect on error
-          } else {
-              let newData = Object.assign({}, fighterData, { availableFighters: result });
-              console.log(newData);
-              res.render("list.ejs", newData);
+      if (req.query.forename) {
+          queryConditions.push("forename LIKE ?");
+          queryParameters.push('%' + req.query.forename + '%');
+      }
+      if (req.query.surname) {
+          queryConditions.push("surname LIKE ?");
+          queryParameters.push('%' + req.query.surname + '%');
+      }
+      if (req.query.age) {
+        queryConditions.push("age = ?");
+        queryParameters.push(req.query.age);
+      }
+      if (req.query.fights) {
+        queryConditions.push("fights = ?");
+        queryParameters.push(req.query.fights);
+      }
+      if (req.query.wins) {
+        queryConditions.push("wins = ?");
+        queryParameters.push(req.query.wins);
+      }
+      if (req.query.losses) {
+        queryConditions.push("losses = ?");
+        queryParameters.push(req.query.losses);
+      }
+      if (req.query.draws) {
+        queryConditions.push("draws = ?");
+        queryParameters.push(req.query.draws);
+      }
+      if (req.query.weight) {
+        queryConditions.push("weight = ?");
+        queryParameters.push(req.query.weight);
+    }
+    
+    // Only add 'WHERE' if there are conditions
+    if (queryConditions.length > 0) {
+      sqlQuery += " WHERE " + queryConditions.join(' AND ');
+  } else {
+      // If no search criteria, return an empty result
+      return res.render("list.ejs", { promotionName: "Instant Smoke Promotions", availableFighters: [] });
+  }
+
+  // Debugging: Log the final SQL query and parameters
+  console.log("SQL Query:", sqlQuery);
+  console.log("Parameters:", queryParameters);
+
+  // Execute SQL query with parameterized input
+  db.query(sqlQuery, queryParameters, (err, result) => {
+      if (err) {
+          console.error(err.message); // Log the error
+          res.redirect('./'); // Redirect on error
+      } else {
+          let newData = Object.assign({}, fighterData, { availableFighters: result });
+          console.log(newData);
+          res.render("list.ejs", newData);
           }
       });        
   });
