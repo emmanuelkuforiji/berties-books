@@ -10,13 +10,36 @@
       <p>Search our database of fighters!</p>
       <!-- <input id="search-box" type="text" name="keyword" value="Default"> -->
       <p>Fighter First Name: <input id="forename" type="text" name="forename" value="" /></p>
-        <p>Fighter Last Name: <input id="surname" type="text" name="surname" value="" /></p>
-        <p>Fighter Age: <input id="age" type="number" name="age" min="1" max="99" step="1" value="" /></p>
-        <p>Number of Fights: <input id="fights" type="number" name="fights" min="0" max="9999" step="1" value="" /></p>
-        <p>Number of Wins: <input id="wins" type="number" name="wins" min="0" max="999" step="1" value="" /></p>
-        <p>Number of Losses: <input id="losses" type="number" name="losses" min="0" max="999" step="1" value="" /></p>
-        <p>Number of Draws: <input id="draws" type="number" name="draws" min="0" max="999" step="1" value="" /></p>
-        <p>Fighter Weight (in lb)<input id="weight" type="number" name="weight" min="100" max="500" step="0.1" value="" /></p>
+      <p>Fighter Last Name: <input id="surname" type="text" name="surname" value="" /></p>
+      <p>Fighter Age Range: 
+          Minimum Age: <input id="minAge" type="number" name="minAge" min="1" max="99" step="1" value="" />
+          Maximum Age: <input id="maxAge" type="number" name="maxAge" min="1" max="99" step="1" value="" />
+      </p>      
+      <p>
+        Number of Fights Range: 
+          Minimum Fights: <input id="minFights" type="number" name="minFights" min="0" max="9999" step="1" value="" />
+          Maximum Fights: <input id="maxFights" type="number" name="maxFights" min="0" max="9999" step="1" value="" />
+      </p>
+      <p>
+        Number of Wins Range: 
+          Minimum Wins: <input id="minWins" type="number" name="minWins" min="0" max="999" step="1" value="" />
+          Maximum Wins: <input id="maxWins" type="number" name="maxWins" min="0" max="999" step="1" value="" />
+      </p>
+      <p>
+        Number of Losses Range: 
+        Minimum Losses: <input id="minLosses" type="number" name="minLosses" min="0" max="999" step="1" value="" />
+        Maximum Losses: <input id="maxLosses" type="number" name="maxLosses" min="0" max="999" step="1" value="" />
+      </p>
+      <p>
+        Number of Draws Range: 
+        Minimum Draws: <input id="minDraws" type="number" name="minDraws" min="0" max="999" step="1" value="" />
+        Maximum Draws: <input id="maxDraws" type="number" name="maxDraws" min="0" max="999" step="1" value="" />
+      </p>
+      <p>
+        Fighter Weight Range (in lb): 
+        Minimum Weight: <input id="minWeight" type="number" name="minWeight" min="100" max="500" step="0.1" value="" />
+        Maximum Weight: <input id="maxWeight" type="number" name="maxWeight" min="100" max="500" step="0.1" value="" />
+      </p>
       <input type="submit" value="Search" >
     </form>
   </body>

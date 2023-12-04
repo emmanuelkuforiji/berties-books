@@ -31,30 +31,66 @@ module.exports = function(app, fighterData) {
           queryConditions.push("surname LIKE ?");
           queryParameters.push('%' + req.query.surname + '%');
       }
-      if (req.query.age) {
-        queryConditions.push("age = ?");
-        queryParameters.push(req.query.age);
+      if (req.query.minAge && req.query.maxAge) {
+        queryConditions.push("age BETWEEN ? AND ?");
+        queryParameters.push(req.query.minAge, req.query.maxAge);
+      } else if (req.query.minAge) {
+        queryConditions.push("age >= ?");
+        queryParameters.push(req.query.minAge);
+      } else if (req.query.maxAge) {
+        queryConditions.push("age <= ?");
+        queryParameters.push(req.query.maxAge);
       }
-      if (req.query.fights) {
-        queryConditions.push("fights = ?");
-        queryParameters.push(req.query.fights);
+      if (req.query.minFights && req.query.maxFights) {
+        queryConditions.push("fights BETWEEN ? AND ?");
+        queryParameters.push(req.query.minFights, req.query.maxFights);
+      } else if (req.query.minFights) {
+        queryConditions.push("fights >= ?");
+        queryParameters.push(req.query.minFights);
+      } else if (req.query.maxFights) {
+        queryConditions.push("fights <= ?");
+        queryParameters.push(req.query.maxFights);
       }
-      if (req.query.wins) {
-        queryConditions.push("wins = ?");
-        queryParameters.push(req.query.wins);
+      if (req.query.minWins && req.query.maxWins) {
+        queryConditions.push("wins BETWEEN ? AND ?");
+        queryParameters.push(req.query.minWins, req.query.maxWins);
+      } else if (req.query.minWins) {
+        queryConditions.push("wins >= ?");
+        queryParameters.push(req.query.minWins);
+      } else if (req.query.maxWins) {
+        queryConditions.push("wins <= ?");
+        queryParameters.push(req.query.maxWins);
       }
-      if (req.query.losses) {
-        queryConditions.push("losses = ?");
-        queryParameters.push(req.query.losses);
+      if (req.query.minLosses && req.query.maxLosses) {
+        queryConditions.push("losses BETWEEN ? AND ?");
+        queryParameters.push(req.query.minLosses, req.query.maxLosses);
+      } else if (req.query.minLosses) {
+        queryConditions.push("losses >= ?");
+        queryParameters.push(req.query.minLosses);
+      } else if (req.query.maxLosses) {
+        queryConditions.push("losses <= ?");
+        queryParameters.push(req.query.maxLosses);
       }
-      if (req.query.draws) {
-        queryConditions.push("draws = ?");
-        queryParameters.push(req.query.draws);
+      if (req.query.minDraws && req.query.maxDraws) {
+        queryConditions.push("draws BETWEEN ? AND ?");
+        queryParameters.push(req.query.minDraws, req.query.maxDraws);
+      } else if (req.query.minDraws) {
+        queryConditions.push("draws >= ?");
+        queryParameters.push(req.query.minDraws);
+      } else if (req.query.maxDraws) {
+        queryConditions.push("draws <= ?");
+        queryParameters.push(req.query.maxDraws);
       }
-      if (req.query.weight) {
-        queryConditions.push("weight = ?");
-        queryParameters.push(req.query.weight);
-    }
+      if (req.query.minWeight && req.query.maxWeight) {
+        queryConditions.push("weight BETWEEN ? AND ?");
+        queryParameters.push(req.query.minWeight, req.query.maxWeight);
+      } else if (req.query.minWeight) {
+        queryConditions.push("weight >= ?");
+        queryParameters.push(req.query.minWeight);
+      } else if (req.query.maxWeight) {
+        queryConditions.push("weight <= ?");
+        queryParameters.push(req.query.maxWeight);
+      }
     
     // Only add 'WHERE' if there are conditions
     if (queryConditions.length > 0) {
