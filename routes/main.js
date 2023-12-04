@@ -148,37 +148,41 @@ module.exports = function(app, fighterData) {
     app.get('/login', function (req,res) {
         res.render('login.ejs', fighterData);                                                                     
     });                                                                                                 
-    app.post('/loggedin', function (req,res) {
-        let bcrypt = require('bcrypt')
-        let sqlquery = "SELECT password FROM user WHERE username = ?";
-        let newData = req.body.username;
-        db.query(sqlquery, newData, (err, result) => {
-            if (err) {
-                 console.error(err);
-              }
-            else{
-                console.log(result);
-                bcrypt.compare(req.body.password, result[0].password, function(err, result) {
-                    if (err) {
-                      // TODO: Handle error
-                      console.log(err);
-                    }
-                    else if (result == true) {  
-                    // Save user session here, when login is successful
-                    req.session.userId = req.body.username;
-                    // TODO: Send message
-                    res.send('Logged in! <a href = ' + './' + '>home</a>');
-                    }
-                    else {
-                      // TODO: Send message
-                      res.send('Username or Password incorrect <a href = ' + './' + '>home</a>');
-                    }
+    app.post('/loggedin', function (req, res) {
+      let bcrypt = require('bcrypt');
+      let sqlquery = "SELECT password FROM user WHERE username = ?";
+      let username = req.body.username;
+      db.query(sqlquery, username, (err, result) => {
+          if (err) {
+              console.error(err);
+          } else {
+              if (result.length > 0) {
+                  bcrypt.compare(req.body.password, result[0].password, function(err, bcryptResult) {
+                      if (err) {
+                          console.log(err);
+                          // Handle bcrypt error
+                      } else if (bcryptResult) {
+                          // Save user session here, when login is successful
+                          req.session.userId = username;
+                          res.send('Logged in! <a href="./">home</a>');
+                      } else {
+                          // Render login page with incorrect credentials message
+                          res.render('login.ejs', {
+                              promotionName: fighterData.promotionName,
+                              message: "Username or Password incorrect. Please try again."
+                          });
+                      }
                   });
-            }
-           })
-
-        
-        })
+              } else {
+                  // Render login page with user not found message
+                  res.render('login.ejs', {
+                      promotionName: fighterData.promotionName,
+                      message: "Username not found. Please try again."
+                  });
+              }
+          }
+      });
+  });
     
     app.get('/logout', redirectLogin, (req,res) => {
         req.session.destroy(err => {
