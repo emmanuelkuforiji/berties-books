@@ -1,4 +1,5 @@
 module.exports = function(app, fighterData) {
+  const request = require('request');
   const { check, validationResult } = require('express-validator');
   const redirectLogin = (req, res, next) => {
     if (!req.session.userId ) {
@@ -247,6 +248,36 @@ module.exports = function(app, fighterData) {
           console.log(newData)
           res.render("heavyweights.ejs", newData)
         });
-    });       
+      });
+
+      // Display the form on GET request
+      app.get('/weather', function (req, res) {
+          res.render('weather');
+      });
+
+      // Process the form and display weather on POST request
+      app.post('/weather', function (req, res) {
+          let apiKey = 'cdc24913279078ab8d38d9cd4b6e0963';
+          let city = req.body.city; // get city from POST request body
+          let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+          
+          request(url, function (err, response, body) {
+              if (err) {
+                  console.log('error:', err);
+                  res.send('Error occurred while fetching weather data.');
+              } else {
+                  let weather = JSON.parse(body);
+                  if(weather.main) {
+                      let wmsg = 'It is ' + weather.main.temp +
+                          ' degrees in ' + weather.name +
+                          '! <br> The humidity now is: ' +
+                          weather.main.humidity;
+                      res.send(wmsg);
+                  } else {
+                      res.send('Unable to find weather data for the specified city.');
+                  }
+              }
+          });
+      });     
 
 }
