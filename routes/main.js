@@ -278,6 +278,36 @@ module.exports = function(app, fighterData) {
                   }
               }
           });
-      });     
+      });
+      
+      app.get('/sportsbetting', function (req, res) {
+        res.render('sportsbetting');
+    });
+
+      app.post('/sportsbetting', function (req, res) {
+          
+        let apiKey =  '35e87dee4c9893e7c16d54a1c95d8993';
+        let regions = req.body.regions;
+        let markets = req.body.markets;
+        let url = `https://api.the-odds-api.com/v4/sports/upcoming/odds/?regions=${regions}&markets=${markets}&apiKey=${apiKey}`
+                     
+        request(url, function (err, response, body) {
+          if (err) {
+            console.log('error:', err);
+            res.send('Error occurred while fetching betting data.');
+        } else {
+            let sportsbetting = JSON.parse(body);
+            if(sportsbetting.length > 0) {
+                sportsbetting.forEach((item) => {
+                  console.log(item.sport_key);
+
+                })
+                res.send();
+            } else {
+                res.send('Unable to find betting data for the specified region or market.');
+          }} 
+        });
+
+  });  
 
 }
