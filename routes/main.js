@@ -284,30 +284,43 @@ module.exports = function(app, fighterData) {
         res.render('sportsbetting');
     });
 
-      app.post('/sportsbetting', function (req, res) {
-          
-        let apiKey =  '35e87dee4c9893e7c16d54a1c95d8993';
-        let regions = req.body.regions;
-        let markets = req.body.markets;
-        let url = `https://api.the-odds-api.com/v4/sports/upcoming/odds/?regions=${regions}&markets=${markets}&apiKey=${apiKey}`
-                     
-        request(url, function (err, response, body) {
+    app.post('/sportsbetting', function (req, res) {
+      let apiKey = '35e87dee4c9893e7c16d54a1c95d8993';
+      let regions = req.body.regions;
+      let url = `https://api.the-odds-api.com/v4/sports/upcoming/odds/?regions=${regions}&markets=h2h&apiKey=${apiKey}`;
+  
+      request(url, function (err, response, body) {
           if (err) {
-            console.log('error:', err);
-            res.send('Error occurred while fetching betting data.');
-        } else {
-            let sportsbetting = JSON.parse(body);
-            if(sportsbetting.length > 0) {
-                sportsbetting.forEach((item) => {
-                  console.log(item.sport_key);
-
-                })
-                res.send();
-            } else {
-                res.send('Unable to find betting data for the specified region or market.');
-          }} 
-        });
-
-  });  
-
+              console.log('error:', err);
+              res.send('Error occurred while fetching betting data.');
+          } else {
+              let sportsbetting = JSON.parse(body);
+              if (sportsbetting.length > 0) {
+                  let output = '<p>';
+                  sportsbetting.forEach((item, index) => {
+                      if (item.bookmakers && item.bookmakers.length > 0 && item.bookmakers[0].markets && item.bookmakers[0].markets.length > 0) {
+                          let bookmaker = item.bookmakers[0];
+                          let market = bookmaker.markets[0];
+                          if (market.outcomes && market.outcomes.length > 0) {
+                              let homeOutcome = market.outcomes.find(o => o.name === item.home_team);
+                              let awayOutcome = market.outcomes.find(o => o.name === item.away_team);
+  
+                              if (index > 0) output += '<br>'; // Add line break before each item except the first
+                              output += `Sport and League: ${item.sport_key} / Market: ${market.key} / Home Team: ${item.home_team} / 
+                              Home Team Price: ${homeOutcome.price} / Away Team: ${item.away_team} / 
+                              Away Team Price: ${awayOutcome.price} / Bookmakers: ${bookmaker.title}`;
+                          }
+                      }
+                  });
+                  output += '</p>';
+                  res.send(output);
+              } else {
+                  res.send('Unable to find betting data for the specified region or market.');
+              }
+          }
+      });
+  });
+  
+  
+  
 }
