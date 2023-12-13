@@ -320,6 +320,37 @@ module.exports = function(app, fighterData) {
           }
       });
   });
+  app.get('/api', function (req, res) {
+    let keyword = req.query.keyword;
+    let sqlquery;
+
+    if (keyword) {
+        // Search both forename and surname for the keyword
+        sqlquery = "SELECT * FROM fighters WHERE forename LIKE ? OR surname LIKE ?";
+        // Using '%' for pattern matching - any fighters with forename or surname containing the keyword
+        db.query(sqlquery, ['%' + keyword + '%', '%' + keyword + '%'], (err, result) => {
+            if (err) {
+                console.error(err);
+                res.redirect('./');
+            } else {
+                res.json(result);
+            }
+        });
+    } else {
+        // Query database to get all fighters if no keyword is provided
+        sqlquery = "SELECT * FROM fighters";
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                console.error(err);
+                res.redirect('./');
+            } else {
+                res.json(result);
+            }
+        });
+    }
+});
+
+
   
   
   
