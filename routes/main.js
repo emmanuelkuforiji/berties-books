@@ -362,34 +362,49 @@ module.exports = function(app, fighterData) {
 // Password reset request route
 app.post('/requestResetPassword', (req, res) => {
   const email = req.body.email;
-  const token = crypto.randomBytes(20).toString('hex');
-  const expires = new Date(Date.now() + 3600000); // 1 hour from now
+  const sqlQuery = "SELECT email FROM user WHERE email = ?";
 
-  const sqlUpdate = "UPDATE user SET resetPasswordToken=?, resetPasswordExpires=? WHERE email=?";
-  db.query(sqlUpdate, [token, expires, email], (err, result) => {
+  db.query(sqlQuery, [email], (err, result) => {
       if (err) {
           console.error(err);
-          return res.redirect('/error');
+          return res.render('error'); // Assuming you have an error page
       }
 
-      // Generate the reset link based on the host URL
-      const resetLink = req.protocol + '://' + req.get('host') + '/resetPassword/' + token;
+      if (result.length === 0) {
+          return res.render('forgotpassword', {
+              message: 'No account with that email address exists.'
+          });
+      }
 
-      const mailOptions = {
-          from: process.env.EMAIL_USERNAME, 
-          to: email,
-          subject: 'Password Reset Link',
-          text: `Please click on the following link to reset your password: ${resetLink}`
-      };
+      const token = crypto.randomBytes(20).toString('hex');
+      const expires = new Date(Date.now() + 3600000); // 1 hour from now
 
-      transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-              console.log(error);
-              return res.redirect('/error');
-          } else {
-              console.log('Email sent: ' + info.response);
-              res.send('A password reset link has been sent to ' + email);
+      const sqlUpdate = "UPDATE user SET resetPasswordToken=?, resetPasswordExpires=? WHERE email=?";
+      db.query(sqlUpdate, [token, expires, email], (err, updateResult) => {
+          if (err) {
+              console.error(err);
+              return res.render('error'); // Assuming you have an error page
           }
+
+          const resetLink = req.protocol + '://' + req.get('host') + '/resetPassword/' + token;
+          const mailOptions = {
+              from: process.env.EMAIL_USERNAME, 
+              to: email,
+              subject: 'Password Reset Link',
+              text: `Please click on the following link to reset your password: ${resetLink}`
+          };
+
+          transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+            return res.render('forgotpassword', {
+                message: 'Failed to send reset link. Please try again.'
+            });
+          } else {
+            console.log('Email sent: ' + info.response);
+            res.render('passwordlinksent'); 
+          }
+        });
       });
   });
 });
@@ -400,6 +415,15 @@ app.get('/forgotpassword', function (req, res) {
 // Password reset route
 app.get('/resetPassword/:token', (req, res) => {
   const token = req.params.token;
+    const newPassword = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    if (newPassword !== confirmPassword) {
+        return res.render('resetPassword', {
+            token: token,
+            message: 'Passwords do not match. Please try again.'
+        });
+    }
+
   const sqlQuery = "SELECT * FROM user WHERE resetPasswordToken=? AND resetPasswordExpires > NOW()";
   db.query(sqlQuery, [token], (err, result) => {
       if (err || result.length === 0) {
@@ -414,27 +438,31 @@ app.get('/resetPassword/:token', (req, res) => {
 app.post('/resetPassword/:token', (req, res) => {
   const token = req.params.token;
   const newPassword = req.body.password;
-  const saltRounds = 10;
+  const confirmPassword = req.body.confirmPassword;
 
+  if (newPassword !== confirmPassword) {
+      return res.render('resetPassword', {
+          token: token,
+          message: 'Passwords do not match. Please try again.'
+      });
+  }
+  const saltRounds = 10;
   bcrypt.hash(newPassword, saltRounds, function(err, hashedPassword) {
       if (err) {
           console.error(err);
           return res.redirect('/error');
       }
-      const sqlUpdate = "UPDATE user SET password=?, resetPasswordToken=NULL, resetPasswordExpires=NULL WHERE resetPasswordToken=?";
-      db.query(sqlUpdate, [hashedPassword, token], (err, result) => {
+      // Update both hashed and plain text password
+      const sqlUpdate = "UPDATE user SET password=?, plainpassword=?, resetPasswordToken=NULL, resetPasswordExpires=NULL WHERE resetPasswordToken=?";
+      db.query(sqlUpdate, [hashedPassword, newPassword, token], (err, result) => {
           if (err) {
               console.error(err);
               return res.redirect('/error');
           }
-          res.send('Your password has been updated.');
+          res.send('Your password has been updated. <a href="/login">Click here to login</a>');
       });
   });
 });
 
 
-
-  
-  
-  
 }
