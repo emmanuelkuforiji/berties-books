@@ -1,4 +1,14 @@
 module.exports = function(app, fighterData) {
+  const nodemailer = require('nodemailer');
+  const crypto = require('crypto'); // for generating the token
+  // Configure Nodemailer with Gmail
+  const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
   const request = require('request');
   const { check, validationResult } = require('express-validator');
   const redirectLogin = (req, res, next) => {
@@ -349,6 +359,79 @@ module.exports = function(app, fighterData) {
         });
     }
 });
+// Password reset request route
+app.post('/requestResetPassword', (req, res) => {
+  const email = req.body.email;
+  const token = crypto.randomBytes(20).toString('hex');
+  const expires = new Date(Date.now() + 3600000); // 1 hour from now
+
+  const sqlUpdate = "UPDATE user SET resetPasswordToken=?, resetPasswordExpires=? WHERE email=?";
+  db.query(sqlUpdate, [token, expires, email], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.redirect('/error');
+      }
+
+      // Generate the reset link based on the host URL
+      const resetLink = req.protocol + '://' + req.get('host') + '/resetPassword/' + token;
+
+      const mailOptions = {
+          from: process.env.EMAIL_USERNAME, 
+          to: email,
+          subject: 'Password Reset Link',
+          text: `Please click on the following link to reset your password: ${resetLink}`
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+              console.log(error);
+              return res.redirect('/error');
+          } else {
+              console.log('Email sent: ' + info.response);
+              res.send('A password reset link has been sent to ' + email);
+          }
+      });
+  });
+});
+app.get('/forgotpassword', function (req, res) {
+  res.render('forgotpassword.ejs');
+});
+
+// Password reset route
+app.get('/resetPassword/:token', (req, res) => {
+  const token = req.params.token;
+  const sqlQuery = "SELECT * FROM user WHERE resetPasswordToken=? AND resetPasswordExpires > NOW()";
+  db.query(sqlQuery, [token], (err, result) => {
+      if (err || result.length === 0) {
+          console.error(err);
+          return res.redirect('/error');
+      }
+      // Render a page for the user to enter a new password
+      res.render('resetPassword', { token: token });
+  });
+});
+
+app.post('/resetPassword/:token', (req, res) => {
+  const token = req.params.token;
+  const newPassword = req.body.password;
+  const saltRounds = 10;
+
+  bcrypt.hash(newPassword, saltRounds, function(err, hashedPassword) {
+      if (err) {
+          console.error(err);
+          return res.redirect('/error');
+      }
+      const sqlUpdate = "UPDATE user SET password=?, resetPasswordToken=NULL, resetPasswordExpires=NULL WHERE resetPasswordToken=?";
+      db.query(sqlUpdate, [hashedPassword, token], (err, result) => {
+          if (err) {
+              console.error(err);
+              return res.redirect('/error');
+          }
+          res.send('Your password has been updated.');
+      });
+  });
+});
+
 
 
   
