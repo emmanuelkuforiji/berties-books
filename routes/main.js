@@ -134,9 +134,11 @@ module.exports = function(app, fighterData) {
     app.post('/registered', [check('email').isEmail()], check('password').isLength({min: 8}), function (req, res) {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        res.redirect('./register'); 
-      }
-      else {
+        return res.render('register', {
+          promotionName: fighterData.promotionName,
+          message: 'Password must be at least 8 characters long.' 
+        });
+      }else {
       const saltRounds = 10;
       const plainPassword = req.body.password;
       bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) {
