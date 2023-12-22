@@ -1,13 +1,13 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Register for <%= promotionName %></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <script>
       function validatePassword() {
-        var password = document.getElementById('password').value;
+        var password = document.getElementById("password").value;
         if (password.length < 8) {
-          alert('Password must be at least 8 characters long.');
+          alert("Password must be at least 8 characters long.");
           return false;
         }
         return true;
@@ -18,15 +18,44 @@
     <h1>Register for <%= promotionName %></h1>
 
     <% if (typeof message !== 'undefined' && message) { %>
-      <p class="error-message"><%= message %></p>
+    <p class="error-message"><%= message %></p>
     <% } %>
 
-    <form method="POST" action="/registered" onsubmit="return validatePassword();">
-      <p>First name: <input id="first" type="text" name="first" placeholder="First Name" /></p>
-      <p>Last name: <input id="last" type="text" name="last" placeholder="Last Name" /></p>
-      <p>Email: <input id="email" type="email" name="email" placeholder="Email" /></p>
-      <p>Username: <input id="username" type="text" name="username" placeholder="Username" /></p>
-      <p>Password: <input id="password" type="password" name="password" placeholder="Password" /></p>
+    <form
+      method="POST"
+      action="/registered"
+      onsubmit="return validatePassword();"
+    >
+      <p>
+        First name:
+        <input id="first" type="text" name="first" placeholder="First Name" />
+      </p>
+      <p>
+        Last name:
+        <input id="last" type="text" name="last" placeholder="Last Name" />
+      </p>
+      <p>
+        Email:
+        <input id="email" type="email" name="email" placeholder="Email" />
+      </p>
+      <p>
+        Username:
+        <input
+          id="username"
+          type="text"
+          name="username"
+          placeholder="Username"
+        />
+      </p>
+      <p>
+        Password:
+        <input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Password"
+        />
+      </p>
       <input type="submit" value="Register" />
     </form>
   </body>

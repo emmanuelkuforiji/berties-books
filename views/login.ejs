@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Login for <%= promotionName %></title>
@@ -8,16 +8,30 @@
     <h1>Login for <%= promotionName %></h1>
 
     <% if (typeof message !== 'undefined' && message) { %>
-        <p class="error-message"><%= message %></p>
+    <p class="error-message"><%= message %></p>
     <% } %>
 
     <form method="POST" action="/loggedin">
-        <p>Username: <input id="username" type="text" name="username" placeholder="username" /></p>
-        <p>Password: <input id="password" type="password" name="password" placeholder="password" /></p>
-        <input type="submit" value="Login" />
+      <p>
+        Username:
+        <input
+          id="username"
+          type="text"
+          name="username"
+          placeholder="username"
+        />
+      </p>
+      <p>
+        Password:
+        <input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="password"
+        />
+      </p>
+      <input type="submit" value="Login" />
     </form>
     <p><a href="/forgotpassword">Forgot Password?</a></p>
   </body>
 </html>
-
-

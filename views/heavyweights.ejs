@@ -1,17 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Welcome to <%=promotionName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
     <h1><%=promotionName%> Heavyweights</h1>
-    <h2>As the saying goes, there's boxing and then there's heavyweight boxing. 
-        Here are the Heavyweights on our roster:</h2>
+    <h2>
+      As the saying goes, there's boxing and then there's heavyweight boxing.
+      Here are the Heavyweights on our roster:
+    </h2>
     <ul>
       <% availableFighters.forEach(function(fighter) { %>
-        <li>| <%= fighter.forename%> <%=fighter.surname%> | <%= fighter.age%> years old | <%= fighter.fights%> Fights | <%= fighter.wins%> Wins | <%= fighter.losses%> Losses | <%= fighter.draws%> Draws | <%= fighter.weight%>lb |</li>
+      <li>
+        | <%= fighter.forename%> <%=fighter.surname%> | <%= fighter.age%> years
+        old | <%= fighter.fights%> Fights | <%= fighter.wins%> Wins | <%=
+        fighter.losses%> Losses | <%= fighter.draws%> Draws | <%=
+        fighter.weight%>lb |
+      </li>
       <% }) %>
     </ul>
-    </body>
+  </body>
 </html>

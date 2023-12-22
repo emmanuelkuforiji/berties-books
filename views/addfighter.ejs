@@ -1,17 +1,17 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Add Fighter to <%=promotionName%></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <script>
       function validateForm() {
-        var fights = parseInt(document.getElementById('fights').value, 10);
-        var wins = parseInt(document.getElementById('wins').value, 10);
-        var losses = parseInt(document.getElementById('losses').value, 10);
-        var draws = parseInt(document.getElementById('draws').value, 10);
+        var fights = parseInt(document.getElementById("fights").value, 10);
+        var wins = parseInt(document.getElementById("wins").value, 10);
+        var losses = parseInt(document.getElementById("losses").value, 10);
+        var draws = parseInt(document.getElementById("draws").value, 10);
 
-        if (fights !== (wins + losses + draws)) {
-          alert('Number of fights does not match win, loss, and draw record.');
+        if (fights !== wins + losses + draws) {
+          alert("Number of fights does not match win, loss, and draw record.");
           return false;
         }
         return true;
@@ -20,17 +20,49 @@
   </head>
   <body>
     <h1><%=promotionName%>: Add Fighter</h1>
-    <form method="POST" action="/fighteradded" onsubmit="return validateForm();">
-        <p>Fighter First Name: <input id="forename" type="text" name="forename" /></p>
-        <p>Fighter Last Name: <input id="surname" type="text" name="surname" /></p>
-        <p>Fighter Age: <input id="age" type="number" name="age" min="1" max="99" /></p>
-        <p>Number of Fights: <input id="fights" type="number" name="fights" min="0" max="9999" /></p>
-        <p>Number of Wins: <input id="wins" type="number" name="wins" min="0" max="999" /></p>
-        <p>Number of Losses: <input id="losses" type="number" name="losses" min="0" max="999" /></p>
-        <p>Number of Draws: <input id="draws" type="number" name="draws" min="0" max="999" /></p>
-        <p>Fighter Weight (in lb): <input id="weight" type="number" name="weight" min="100" max="500" step="0.1" /></p>
-        <input type="submit" value="Add Fighter" />
+    <form
+      method="POST"
+      action="/fighteradded"
+      onsubmit="return validateForm();"
+    >
+      <p>
+        Fighter First Name: <input id="forename" type="text" name="forename" />
+      </p>
+      <p>
+        Fighter Last Name: <input id="surname" type="text" name="surname" />
+      </p>
+      <p>
+        Fighter Age:
+        <input id="age" type="number" name="age" min="1" max="99" />
+      </p>
+      <p>
+        Number of Fights:
+        <input id="fights" type="number" name="fights" min="0" max="9999" />
+      </p>
+      <p>
+        Number of Wins:
+        <input id="wins" type="number" name="wins" min="0" max="999" />
+      </p>
+      <p>
+        Number of Losses:
+        <input id="losses" type="number" name="losses" min="0" max="999" />
+      </p>
+      <p>
+        Number of Draws:
+        <input id="draws" type="number" name="draws" min="0" max="999" />
+      </p>
+      <p>
+        Fighter Weight (in lb):
+        <input
+          id="weight"
+          type="number"
+          name="weight"
+          min="100"
+          max="500"
+          step="0.1"
+        />
+      </p>
+      <input type="submit" value="Add Fighter" />
     </form>
   </body>
 </html>
-
