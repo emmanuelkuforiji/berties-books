@@ -279,14 +279,17 @@ module.exports = function (app, fighterData) {
     db.query(sqlquery, newrecord, (err, result) => {
       if (err) {
         return console.error(err.message);
-      } else
-        res.send(
-          " The Fighter: " +
+      } else {
+        res.write(
+          "<p>The Fighter: " +
             req.body.forename +
             " " +
             req.body.surname +
-            " has been added to the database"
+            " has been added to the database.</p>"
         );
+        res.write('<p><a href="/">Go back to Home Page</a></p>');
+        res.end();
+      }
     });
   });
 

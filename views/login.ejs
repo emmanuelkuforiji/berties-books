@@ -5,6 +5,8 @@
     <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
+    <%- include('navbar') %>
+    <div class="container"></div>
     <h1>Login for <%= promotionName %></h1>
 
     <% if (typeof message !== 'undefined' && message) { %>
@@ -33,5 +35,6 @@
       <input type="submit" value="Login" />
     </form>
     <p><a href="/forgotpassword">Forgot Password?</a></p>
+  </div>
   </body>
 </html>

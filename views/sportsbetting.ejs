@@ -5,11 +5,14 @@
     <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
+    <%- include('navbar') %>
+    <div class="container"></div>
     <h1>Weather Checker</h1>
     <form action="/sportsbetting" method="POST">
       <label for="regions">Enter a region:</label>
       <input type="text" id="regions" name="regions" required />
       <button type="submit">Get Odds</button>
     </form>
+  </div>
   </body>
 </html>

@@ -5,11 +5,14 @@
     <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
+    <%- include('navbar') %>
+    <div class="container"></div>
     <h1>Weather Checker</h1>
     <form action="/weather" method="POST">
       <label for="city">Enter City Name:</label>
       <input type="text" id="city" name="city" required />
       <button type="submit">Get Weather</button>
     </form>
+  </div>
   </body>
 </html>

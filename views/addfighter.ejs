@@ -5,20 +5,54 @@
     <link rel="stylesheet" type="text/css" href="/main.css" />
     <script>
       function validateForm() {
-        var fights = parseInt(document.getElementById("fights").value, 10);
-        var wins = parseInt(document.getElementById("wins").value, 10);
-        var losses = parseInt(document.getElementById("losses").value, 10);
-        var draws = parseInt(document.getElementById("draws").value, 10);
+        var forename = document.getElementById("forename").value.trim();
+        var surname = document.getElementById("surname").value.trim();
+        var age = document.getElementById("age").value.trim();
+        var fights = document.getElementById("fights").value.trim();
+        var wins = document.getElementById("wins").value.trim();
+        var losses = document.getElementById("losses").value.trim();
+        var draws = document.getElementById("draws").value.trim();
+        var weight = parseFloat(document.getElementById("weight").value.trim());
+    
+        // Check if any field is empty
+        if (!forename || !surname || !age || !fights || !wins || !losses || !draws || !weight) {
+          alert("All fields must be filled out.");
+          return false;
+        }
+    
+        // Parse numerical values for validation
+        fights = parseInt(fights, 10);
+        wins = parseInt(wins, 10);
+        losses = parseInt(losses, 10);
+        draws = parseInt(draws, 10);
 
+         // Validate age
+        age = parseInt(age, 10);
+        if (age < 18 || age > 60) {
+        alert("Fighter must be aged between 18-60.");
+        return false;
+        }
+    
+        // Check if fights do not match win, loss, and draw record
         if (fights !== wins + losses + draws) {
           alert("Number of fights does not match win, loss, and draw record.");
           return false;
         }
+    
+        // Validate weight
+        if (weight < 100 || weight > 500) {
+          alert("Invalid weight. Weight must be between 100 and 500 lb.");
+          return false;
+        }
+    
         return true;
       }
     </script>
+    
   </head>
   <body>
+    <%- include('navbar') %>
+    <div class="container"></div>
     <h1><%=promotionName%>: Add Fighter</h1>
     <form
       method="POST"
@@ -33,7 +67,7 @@
       </p>
       <p>
         Fighter Age:
-        <input id="age" type="number" name="age" min="1" max="99" />
+        <input id="age" type="number" name="age" min="18" max="60" />
       </p>
       <p>
         Number of Fights:
@@ -64,5 +98,6 @@
       </p>
       <input type="submit" value="Add Fighter" />
     </form>
+  </div>
   </body>
 </html>

@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Welcome to <%=promotionName%></title>
+    <title>Welcome to <%= promotionName %></title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
-    <h1>Welcome to <%=promotionName%></h1>
-    <p><a href="about">About <%=promotionName%></a></p>
-    <p><a href="search">Search for fighters</a></p>
-    <p><a href="addfighter">Add a new fighter</a></p>
-    <p><a href="list">List of fighters</a></p>
-    <p><a href="listusers">List of users</a></p>
-    <p><a href="heavyweights">Heavyweights</a></p>
-    <p><a href="register">Register with us</a></p>
-    <p><a href="weather">Weather</a></p>
-    <p><a href="sportsbetting">Sports Betting</a></p>
-    <p><a href="api">API</a></p>
-    <p><a href="login">Login</a></p>
-    <p><a href="logout">Logout</a></p>
+    <%- include('navbar') %>
+    <div class="container"></div>
+    <h1>Welcome to <%= promotionName %></h1>
+    <img src="/pictures/ringwalk.jpeg" alt="Boxing Ringwalk" class="responsive-image">
+  </div>
   </body>
 </html>

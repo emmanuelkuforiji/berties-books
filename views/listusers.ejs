@@ -5,6 +5,8 @@
     <link rel="stylesheet" type="text/css" href="/main.css" />
   </head>
   <body>
+    <%- include('navbar') %>
+    <div class="container"></div>
     <h1><%=promotionName%></h1>
     <h2>Here are the users subscribed to our promotional company:</h2>
     <ul>
@@ -12,5 +14,6 @@
       <li><%= user.username %>, <%= user.firstname %>, <%= user.lastname %></li>
       <% }) %>
     </ul>
+  </div>
   </body>
 </html>
